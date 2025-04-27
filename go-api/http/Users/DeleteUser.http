@@ -1,0 +1,6 @@
+DELETE {{BASE}}/api/user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU5Nzc2ODcsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidXNlcjEifQ.IWKeJUWp4HAw9T5cIUCV7yUSJGeetaHjtP3PepyCjKs
+
+{
+  "password": "user1234"
+}

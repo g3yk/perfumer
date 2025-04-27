@@ -1,0 +1,6 @@
+POST {{BASE}}/api/auth/login
+
+{
+  "identity": "user2",
+  "password": "user1234"
+}

@@ -1,0 +1,6 @@
+PATCH {{BASE}}/api/user/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU5Nzc2ODcsInVzZXJfaWQiOjEsInVzZXJuYW1lIjoidXNlcjEifQ.IWKeJUWp4HAw9T5cIUCV7yUSJGeetaHjtP3PepyCjKs
+
+{
+  "name": "User 3"
+}

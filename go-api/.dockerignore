@@ -1,0 +1,6 @@
+tmp/
+docs/
+http/
+
+.air.toml
+.env

@@ -1,0 +1,47 @@
+name: ac
+
+services:
+  go-api:
+    # restart: always
+    build: ./go-api
+    # build:
+    #   context: ./go-api
+    #   dockerfile: Dockerfile
+    environment:
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - SECRET=${GO_SECRET}
+    ports:
+      - 3000:3000
+    expose:
+      - "3000"
+    networks:
+      - backend
+    depends_on:
+      - db
+  db:
+    image: postgres:alpine
+    # restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    # WARNING: Do not forget close db port
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    expose:
+      - ${DB_PORT}
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres-db:

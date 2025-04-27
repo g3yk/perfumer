@@ -1,0 +1,8 @@
+POST {{BASE}}/api/user
+
+{
+  "username": "user7",
+  "email": "test7@test.test",
+  "password": "user1234",
+  "name": "User 7"
+}

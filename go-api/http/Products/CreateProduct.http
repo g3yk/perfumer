@@ -1,0 +1,7 @@
+POST {{BASE}}/api/product
+
+{
+  "title": "Test Product 1",
+  "description": "Test description",
+  "amount": 7
+}
