@@ -40,9 +40,19 @@ services:
     networks:
       - backend
   cache:
+    # restart: always
     image: redis:alpine
     expose:
       - 6379
+    networks:
+      - backend
+  llm:
+    # restart: always
+    build: ./llm
+    expose:
+      - 11434
+    ports:
+      - 11434:11434
     networks:
       - backend
 
