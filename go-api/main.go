@@ -9,6 +9,10 @@ import (
 
 	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/gofiber/storage/redis/v3"
+
+	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
@@ -41,6 +45,12 @@ func main() {
 
 	app.Use(recover.New())
 	app.Use(cors.New())
+	app.Use(cache.New(cache.Config{
+		Storage: redis.New(redis.Config{
+			Host: "cache",
+		}),
+		CacheControl: true,
+	}))
 
 	app.Use(swagger.New(swagger.Config{
 		BasePath: "/api/",
