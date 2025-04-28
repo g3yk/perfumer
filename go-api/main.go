@@ -21,6 +21,10 @@ import (
 //	@version		1.0
 //	@description	This is an API
 
+//	@securityDefinitions.apikey	Bearer
+//	@in							header
+//	@name						Authorization
+
 //	@contact.name	g3yk
 
 //	@license.name	Apache 2.0

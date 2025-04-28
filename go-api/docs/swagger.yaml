@@ -1,11 +1,107 @@
 basePath: /api
 definitions:
-  handler.ResponseHTTP:
+  handler.CreateUserData:
+    properties:
+      email:
+        example: user2@me.com
+        type: string
+      name:
+        example: John Doe
+        type: string
+      password:
+        example: user1234
+        type: string
+      username:
+        example: user2
+        type: string
+    type: object
+  handler.CreateUserResponse:
+    properties:
+      data:
+        $ref: '#/definitions/handler.CreateUserData'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  handler.HttpResponse:
     properties:
       data: {}
       message:
         type: string
       status:
+        type: string
+    type: object
+  handler.LoginData:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNT
+        type: string
+    type: object
+  handler.LoginInput:
+    properties:
+      identity:
+        example: user2
+        type: string
+      password:
+        example: user1234
+        type: string
+    type: object
+  handler.LoginResponse:
+    properties:
+      data:
+        $ref: '#/definitions/handler.LoginData'
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  handler.UpdateUserInput:
+    properties:
+      name:
+        example: John Doe
+        type: string
+    type: object
+  model.BaseUser:
+    properties:
+      email:
+        example: user2@me.com
+        type: string
+      name:
+        example: John Doe
+        type: string
+      password:
+        example: user1234
+        type: string
+      username:
+        example: user2
+        type: string
+    type: object
+  model.UserResponse:
+    properties:
+      created_at:
+        example: "2025-04-23T00:00:00Z"
+        type: string
+      deleted_at:
+        example: "2025-04-23T00:00:00Z"
+        type: string
+      email:
+        example: user2@me.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: John Doe
+        type: string
+      password:
+        example: user1234
+        type: string
+      updated_at:
+        example: "2025-04-23T00:00:00Z"
+        type: string
+      username:
+        example: user2
         type: string
     type: object
 info:
@@ -30,12 +126,71 @@ paths:
         name: loginInput
         required: true
         schema:
-          properties:
-            identity:
-              type: string
-            password:
-              type: string
-          type: object
+          $ref: '#/definitions/handler.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      summary: User login
+      tags:
+      - auth
+  /user:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User credentials
+        in: body
+        name: createUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/model.BaseUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.CreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      summary: Create a new user
+      tags:
+      - user
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user by ID
+      parameters:
+      - default: 5
+        description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -43,24 +198,67 @@ paths:
           description: OK
           schema:
             allOf:
-            - $ref: '#/definitions/handler.ResponseHTTP'
+            - $ref: '#/definitions/handler.HttpResponse'
             - properties:
                 data:
-                  type: string
+                  $ref: '#/definitions/model.UserResponse'
               type: object
-        "400":
-          description: Bad Request
+        "404":
+          description: Not Found
           schema:
-            $ref: '#/definitions/handler.ResponseHTTP'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handler.ResponseHTTP'
+            $ref: '#/definitions/handler.HttpResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/handler.ResponseHTTP'
-      summary: User login
+            $ref: '#/definitions/handler.HttpResponse'
+      summary: Get a user
       tags:
-      - auth
+      - user
+    patch:
+      consumes:
+      - application/json
+      description: Update a user by ID
+      parameters:
+      - default: 5
+        description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User credentials
+        in: body
+        name: updateUserInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserResponse'
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Update a user
+      tags:
+      - user
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

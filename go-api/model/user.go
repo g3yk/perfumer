@@ -1,6 +1,29 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
+
+type BaseGormModel struct {
+	ID        uint       `json:"id" example:"1"`
+	CreatedAt time.Time  `json:"created_at" example:"2025-04-23T00:00:00Z"`
+	UpdatedAt time.Time  `json:"updated_at" example:"2025-04-23T00:00:00Z"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" example:"2025-04-23T00:00:00Z"`
+}
+
+type BaseUser struct {
+	Username string `json:"username" example:"user2"`
+	Email    string `json:"email" example:"user2@me.com"`
+	Password string `json:"password" example:"user1234"`
+	Name     string `json:"name" example:"John Doe"`
+}
+
+type UserResponse struct {
+	BaseGormModel
+	BaseUser
+}
 
 // User struct
 type User struct {

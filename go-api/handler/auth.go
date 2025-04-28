@@ -17,6 +17,20 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type LoginInput struct {
+	Identity string `json:"identity" example:"user2"`
+	Password string `json:"password" example:"user1234"`
+}
+
+type LoginResponse struct {
+	HttpResponse
+	Data LoginData
+}
+
+type LoginData struct {
+	Token string `json:"token" example:"it returns jwt token"`
+}
+
 // CheckPasswordHash compare password with hash
 func CheckPasswordHash(password, hash string) bool {
 	t1 := time.Now()
@@ -56,22 +70,19 @@ func valid(email string) bool {
 }
 
 // Login get user and password
-// @Summary      User login
-// @Description  Authenticate user by username or email and password, returns JWT token on success
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param        loginInput  body      object{identity=string,password=string}  true  "Login credentials"
-// @Success 200 {object} ResponseHTTP{data=string}
-// @Failure 400 {object} ResponseHTTP{}
-// @Failure 401 {object} ResponseHTTP{}
-// @Failure 500 {object} ResponseHTTP{}
-// @Router /auth/login [post]
+//
+//	@Summary		User login
+//	@Description	Authenticate user by username or email and password, returns JWT token on success
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			loginInput	body		LoginInput	true	"Login credentials"
+//	@Success		200			{object}	LoginResponse
+//	@Failure		400			{object}	HttpResponse{}
+//	@Failure		401			{object}	HttpResponse{}
+//	@Failure		500			{object}	HttpResponse{}
+//	@Router			/auth/login [post]
 func Login(c *fiber.Ctx) error {
-	type LoginInput struct {
-		Identity string `json:"identity"`
-		Password string `json:"password"`
-	}
 	type UserData struct {
 		ID       uint   `json:"id"`
 		Username string `json:"username"`

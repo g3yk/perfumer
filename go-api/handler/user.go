@@ -14,6 +14,20 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type CreateUserData struct {
+	model.BaseUser
+	Password *string `json:"-"`
+}
+
+type CreateUserResponse struct {
+	HttpResponse
+	Data CreateUserData `json:"data"`
+}
+
+type UpdateUserInput struct {
+	Name string `json:"name" example:"John Doe"`
+}
+
 func hashPassword(password string) (string, error) {
 	t1 := time.Now()
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 9)
@@ -48,6 +62,17 @@ func validUser(id string, p string) bool {
 }
 
 // GetUser get a user
+//
+//	@Summary		Get a user
+//	@Description	Get a user by ID
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int	true	"User ID"	default(5)
+//	@Success		200	{object}	HttpResponse{data=model.UserResponse}
+//	@Failure		404	{object}	HttpResponse{}
+//	@Failure		500	{object}	HttpResponse{}
+//	@Router			/user/{id} [get]
 func GetUser(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DB
@@ -60,49 +85,68 @@ func GetUser(c *fiber.Ctx) error {
 }
 
 // CreateUser new user
+//
+//	@Summary		Create a new user
+//	@Description	Create a new user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			createUserInput	body		model.BaseUser	true	"User credentials"
+//	@Success		200				{object}	CreateUserResponse
+//	@Failure		400				{object}	HttpResponse{}
+//	@Failure		500				{object}	HttpResponse{}
+//	@Router			/user [post]
 func CreateUser(c *fiber.Ctx) error {
-	type NewUser struct {
-		Username string `json:"username"`
-		Email    string `json:"email"`
-	}
-
 	db := database.DB
 	user := new(model.User)
 	if err := c.BodyParser(user); err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err.Error()})
 	}
 
 	validate := validator.New()
 	if err := validate.Struct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"message": "Invalid request body", "errors": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"status": "error", "message": "Invalid request body", "data": err.Error()})
 	}
 
 	hash, err := hashPassword(user.Password)
 	if err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "errors": err.Error()})
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't hash password", "data": err.Error()})
 	}
 
 	user.Password = hash
 	if err := db.Create(&user).Error; err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "errors": err.Error()})
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Couldn't create user", "data": err.Error()})
 	}
 
-	newUser := NewUser{
-		Email:    user.Email,
-		Username: user.Username,
+	newUser := CreateUserData{
+		BaseUser: model.BaseUser{
+			Email:    user.Email,
+			Username: user.Username,
+			Name:     user.Name,
+		},
 	}
 
 	return c.JSON(fiber.Map{"status": "success", "message": "Created user", "data": newUser})
 }
 
 // UpdateUser update user
+//
+//	@Summary		Update a user
+//	@Description	Update a user by ID
+//	@Tags			user
+//	@Security		Bearer
+//	@Accept			json
+//	@Produce		json
+//	@Param			id				path		int				true	"User ID"	default(5)
+//	@Param			updateUserInput	body		UpdateUserInput	true	"User credentials"
+//	@Success		200				{object}	HttpResponse{data=model.UserResponse}
+//	@Failure		401				{object}	HttpResponse{}
+//	@Failure		500				{object}	HttpResponse{}
+//	@Router			/user/{id} [patch]
 func UpdateUser(c *fiber.Ctx) error {
-	type UpdateUserInput struct {
-		Name string `json:"name"`
-	}
 	var uui UpdateUserInput
 	if err := c.BodyParser(&uui); err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
+		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "data": err.Error()})
 	}
 	id := c.Params("id")
 	token := c.Locals("user").(*jwt.Token)

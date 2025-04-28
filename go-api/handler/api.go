@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type ResponseHTTP struct {
+type HttpResponse struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 	Data    any    `json:"data"`
