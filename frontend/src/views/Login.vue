@@ -79,7 +79,7 @@
   
   /* The card where forms are displayed */
   .auth-card {
-    background: #fff;
+    background: blur(12px);
     padding: 2rem;
     border-radius: 15px;
     width: 100%;
@@ -90,7 +90,7 @@
   
   .auth-card h1 {
     margin-bottom: 1.5rem;
-    color: #333;
+    color: white;
     font-size: 2rem;
     font-weight: 500;
   }

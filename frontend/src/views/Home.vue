@@ -154,6 +154,10 @@ function openModal(note) {
   align-items: center;
   gap: 1.5rem;
   text-align: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.3); /* semi-transparent dark background */
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .hero-carousel {
