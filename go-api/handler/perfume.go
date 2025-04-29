@@ -269,11 +269,10 @@ func GetOrder(c *fiber.Ctx) error {
 
 	order := new(model.Order)
 	res := db.
-		Where("orders.id = ?", c.Params("id")).
 		Preload("Perfumes.BaseNotes").
 		Preload("Perfumes.HeartNotes").
 		Preload("Perfumes.TopNotes").
-		First(&order)
+		Find(&order, c.Params("id"))
 
 	if err := res.Error; err != nil {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No order found with ID", "data": res})
