@@ -1,5 +1,92 @@
 basePath: /api
 definitions:
+  handler.AddPerfumetoOrderInput:
+    properties:
+      order_id:
+        example: 1
+        type: integer
+      perfume_ids:
+        example:
+        - 1
+        items:
+          type: integer
+        type: array
+    type: object
+  handler.CreatePerfumeInput:
+    properties:
+      amount:
+        example: 1
+        type: integer
+      baseNotes:
+        example:
+        - 1
+        items:
+          type: integer
+        type: array
+      heartNotes:
+        example:
+        - 1
+        items:
+          type: integer
+        type: array
+      name:
+        type: string
+      topNotes:
+        example:
+        - 1
+        items:
+          type: integer
+        type: array
+    type: object
+  handler.CreatePerfumeNoteInput:
+    properties:
+      note:
+        example: Amber
+        type: string
+    required:
+    - note
+    type: object
+  handler.CreatePerfumeNoteResponse:
+    properties:
+      note:
+        example: Amber
+        type: string
+      perfume_note_id:
+        example: 1
+        type: integer
+    required:
+    - note
+    - perfume_note_id
+    type: object
+  handler.CreatePerfumeResponse:
+    properties:
+      amount:
+        example: 1
+        type: integer
+      baseNotes:
+        items:
+          $ref: '#/definitions/handler.CreatePerfumeNoteInput'
+        type: array
+      created_at:
+        example: "2025-04-23T00:00:00Z"
+        type: string
+      heartNotes:
+        items:
+          $ref: '#/definitions/handler.CreatePerfumeNoteInput'
+        type: array
+      name:
+        type: string
+      perfume_id:
+        example: 1
+        type: integer
+      topNotes:
+        items:
+          $ref: '#/definitions/handler.CreatePerfumeNoteInput'
+        type: array
+      updated_at:
+        example: "2025-04-23T00:00:00Z"
+        type: string
+    type: object
   handler.CreateUserData:
     properties:
       email:
@@ -23,6 +110,16 @@ definitions:
         type: string
       status:
         type: string
+    type: object
+  handler.GetOrderResponse:
+    properties:
+      order_id:
+        example: 1
+        type: integer
+      perfumes:
+        items:
+          $ref: '#/definitions/handler.CreatePerfumeResponse'
+        type: array
     type: object
   handler.HttpResponse:
     properties:
@@ -86,9 +183,6 @@ definitions:
   model.UserResponse:
     properties:
       created_at:
-        example: "2025-04-23T00:00:00Z"
-        type: string
-      deleted_at:
         example: "2025-04-23T00:00:00Z"
         type: string
       email:
@@ -155,6 +249,174 @@ paths:
       summary: User login
       tags:
       - auth
+  /perfume:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Perfume
+      parameters:
+      - description: Perfume
+        in: body
+        name: createPerfumeInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreatePerfumeInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.CreatePerfumeResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      summary: Create a new Perfume
+      tags:
+      - perfume
+  /perfume/add:
+    post:
+      consumes:
+      - application/json
+      description: Add perfume to order
+      parameters:
+      - description: Perfume
+        in: body
+        name: addPerfumetoOrderInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.AddPerfumetoOrderInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  properties:
+                    id:
+                      type: integer
+                  type: object
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Add perfume to order
+      tags:
+      - order
+  /perfume/note:
+    post:
+      consumes:
+      - application/json
+      description: Create a new PerfumeNote
+      parameters:
+      - description: Perfume Note
+        in: body
+        name: createPerfumeNoteInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreatePerfumeNoteInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.CreatePerfumeNoteResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      summary: Create a new PerfumeNote
+      tags:
+      - perfume
+  /perfume/order:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Order
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  properties:
+                    id:
+                      type: integer
+                  type: object
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Create a new Order
+      tags:
+      - order
+  /perfume/order/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get an order
+      parameters:
+      - default: 1
+        description: Order ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/handler.GetOrderResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Get an order
+      tags:
+      - order
   /user:
     post:
       consumes:

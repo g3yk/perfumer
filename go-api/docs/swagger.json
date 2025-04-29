@@ -66,6 +66,291 @@
                 }
             }
         },
+        "/perfume": {
+            "post": {
+                "description": "Create a new Perfume",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "perfume"
+                ],
+                "summary": "Create a new Perfume",
+                "parameters": [
+                    {
+                        "description": "Perfume",
+                        "name": "createPerfumeInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.CreatePerfumeInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handler.CreatePerfumeResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/perfume/add": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Add perfume to order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Add perfume to order",
+                "parameters": [
+                    {
+                        "description": "Perfume",
+                        "name": "addPerfumetoOrderInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.AddPerfumetoOrderInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/perfume/note": {
+            "post": {
+                "description": "Create a new PerfumeNote",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "perfume"
+                ],
+                "summary": "Create a new PerfumeNote",
+                "parameters": [
+                    {
+                        "description": "Perfume Note",
+                        "name": "createPerfumeNoteInput",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.CreatePerfumeNoteInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handler.CreatePerfumeNoteResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/perfume/order": {
+            "post": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Create a new Order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Create a new Order",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/perfume/order/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "description": "Get an order",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "order"
+                ],
+                "summary": "Get an order",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "default": 1,
+                        "description": "Order ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/handler.HttpResponse"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/handler.GetOrderResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.HttpResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "post": {
                 "description": "Create a new user",
@@ -417,6 +702,134 @@
         }
     },
     "definitions": {
+        "handler.AddPerfumetoOrderInput": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "perfume_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        1
+                    ]
+                }
+            }
+        },
+        "handler.CreatePerfumeInput": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "baseNotes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        1
+                    ]
+                },
+                "heartNotes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        1
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "topNotes": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        1
+                    ]
+                }
+            }
+        },
+        "handler.CreatePerfumeNoteInput": {
+            "type": "object",
+            "required": [
+                "note"
+            ],
+            "properties": {
+                "note": {
+                    "type": "string",
+                    "example": "Amber"
+                }
+            }
+        },
+        "handler.CreatePerfumeNoteResponse": {
+            "type": "object",
+            "required": [
+                "note",
+                "perfume_note_id"
+            ],
+            "properties": {
+                "note": {
+                    "type": "string",
+                    "example": "Amber"
+                },
+                "perfume_note_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "handler.CreatePerfumeResponse": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "baseNotes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.CreatePerfumeNoteInput"
+                    }
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-04-23T00:00:00Z"
+                },
+                "heartNotes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.CreatePerfumeNoteInput"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "perfume_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "topNotes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.CreatePerfumeNoteInput"
+                    }
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-04-23T00:00:00Z"
+                }
+            }
+        },
         "handler.CreateUserData": {
             "type": "object",
             "properties": {
@@ -449,6 +862,21 @@
                 },
                 "status": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.GetOrderResponse": {
+            "type": "object",
+            "properties": {
+                "order_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "perfumes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.CreatePerfumeResponse"
+                    }
                 }
             }
         },
@@ -543,10 +971,6 @@
             "type": "object",
             "properties": {
                 "created_at": {
-                    "type": "string",
-                    "example": "2025-04-23T00:00:00Z"
-                },
-                "deleted_at": {
                     "type": "string",
                     "example": "2025-04-23T00:00:00Z"
                 },
