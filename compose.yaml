@@ -1,4 +1,4 @@
-name: ac
+name: perfumer
 
 services:
   go-api:
@@ -20,9 +20,21 @@ services:
       - "3000"
     networks:
       - backend
+      - frontend
     depends_on:
       - db
       - cache
+  frontend:
+    # restart: always
+    build: ./frontend
+    ports:
+      - 80:80
+    expose:
+      - "80"
+    depends_on:
+      - go-api
+    networks:
+      - frontend
   db:
     image: postgres:alpine
     # restart: always
@@ -58,6 +70,8 @@ services:
 
 networks:
   backend:
+    driver: bridge
+  frontend:
     driver: bridge
 
 volumes:

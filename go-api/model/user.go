@@ -7,10 +7,10 @@ import (
 )
 
 type BaseGormModel struct {
-	ID        uint       `json:"id" example:"1"`
-	CreatedAt time.Time  `json:"created_at" example:"2025-04-23T00:00:00Z"`
-	UpdatedAt time.Time  `json:"updated_at" example:"2025-04-23T00:00:00Z"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty" example:"2025-04-23T00:00:00Z"`
+	ID        uint      `json:"id" example:"1"`
+	CreatedAt time.Time `json:"created_at" example:"2025-04-23T00:00:00Z"`
+	UpdatedAt time.Time `json:"updated_at" example:"2025-04-23T00:00:00Z"`
+	// DeletedAt *time.Time `json:"deleted_at,omitempty" example:"2025-04-23T00:00:00Z"`
 }
 
 type BaseUser struct {
@@ -32,4 +32,7 @@ type User struct {
 	Email    string `gorm:"uniqueIndex;not null;size:255;" validate:"required,email" json:"email"`
 	Password string `gorm:"not null;" validate:"required,min=6,max=50" json:"password"`
 	Name     string `json:"name"`
+
+	//Relationships
+	Orders []Order `json:"orders"`
 }
