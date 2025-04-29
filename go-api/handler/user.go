@@ -88,6 +88,15 @@ func GetUser(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{"status": "success", "message": "User found", "data": user})
 }
 
+// GetDeletedUsers get all deleted users
+//
+//	@Summary		Get all deleted users
+//	@Description	Get all deleted users
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{object}	HttpResponse{data=[]model.UserResponse}
+//	@Router			/user/deleted [get]
 func GetDeletedUsers(c *fiber.Ctx) error {
 	log.Println("Get deleted users")
 	db := database.DB
@@ -104,7 +113,7 @@ func GetDeletedUsers(c *fiber.Ctx) error {
 
 // CreateUser new user
 //
-//	@Summary		Create a new user
+//	@Summary		Create a new user                                                              j
 //	@Description	Create a new user
 //	@Tags			user
 //	@Accept			json
@@ -184,6 +193,19 @@ func UpdateUser(c *fiber.Ctx) error {
 }
 
 // DeleteUser delete user
+//
+//	@Summary		Delete a user
+//	@Description	Delete a user by ID
+//	@Tags			user
+//	@Security		Bearer
+//	@Accept			json
+//	@Produce		json
+//	@Param			id				path		int				true	"User ID"
+//	@Param			passwordInput	body		PasswordInput	true	"User credentials"
+//	@Success		200				{object}	HttpResponse{data=nil}
+//	@Failure		401				{object}	HttpResponse{}
+//	@Failure		500				{object}	HttpResponse{}
+//	@Router			/user/{id} [delete]
 func DeleteUser(c *fiber.Ctx) error {
 	var pi PasswordInput
 	if err := c.BodyParser(&pi); err != nil {
@@ -216,6 +238,21 @@ func DeleteUser(c *fiber.Ctx) error {
 	db.Delete(&user)
 	return c.JSON(fiber.Map{"status": "success", "message": "User successfully deleted", "data": nil})
 }
+
+// PermanentDeleteUser delete user
+//
+//	@Summary		Delete a user
+//	@Description	Delete a user by ID
+//	@Tags			user
+//	@Security		Bearer
+//	@Accept			json
+//	@Produce		json
+//	@Param			id				path		int				true	"User ID" default(1)
+//	@Param			passwordInput	body		PasswordInput	true	"User credentials"
+//	@Success		200				{object}	HttpResponse{data=nil}
+//	@Failure		400				{object}	HttpResponse{}
+//	@Failure		401				{object}	HttpResponse{}
+//	@Router			/user/permanent/{id} [delete]
 func PermanentDeleteUser(c *fiber.Ctx) error {
 	var pi PasswordInput
 	if err := c.BodyParser(&pi); err != nil {

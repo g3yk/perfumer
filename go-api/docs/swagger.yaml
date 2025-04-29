@@ -35,7 +35,7 @@ definitions:
   handler.LoginData:
     properties:
       token:
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNT
+        example: it returns jwt token
         type: string
     type: object
   handler.LoginInput:
@@ -54,6 +54,12 @@ definitions:
       message:
         type: string
       status:
+        type: string
+    type: object
+  handler.PasswordInput:
+    properties:
+      password:
+        example: user1234
         type: string
     type: object
   handler.UpdateUserInput:
@@ -176,10 +182,51 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handler.HttpResponse'
-      summary: Create a new user
+      summary: Create a new user                                                              j
       tags:
       - user
   /user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User credentials
+        in: body
+        name: passwordInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.PasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Delete a user
+      tags:
+      - user
     get:
       consumes:
       - application/json
@@ -254,6 +301,71 @@ paths:
       security:
       - Bearer: []
       summary: Update a user
+      tags:
+      - user
+  /user/deleted:
+    get:
+      consumes:
+      - application/json
+      description: Get all deleted users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.UserResponse'
+                  type: array
+              type: object
+      summary: Get all deleted users
+      tags:
+      - user
+  /user/permanent/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - default: 1
+        description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User credentials
+        in: body
+        name: passwordInput
+        required: true
+        schema:
+          $ref: '#/definitions/handler.PasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.HttpResponse'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.HttpResponse'
+      security:
+      - Bearer: []
+      summary: Delete a user
       tags:
       - user
 securityDefinitions:
