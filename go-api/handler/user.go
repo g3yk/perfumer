@@ -28,6 +28,10 @@ type UpdateUserInput struct {
 	Name string `json:"name" example:"John Doe"`
 }
 
+type PasswordInput struct {
+	Password string `json:"password" example:"user1234"`
+}
+
 func hashPassword(password string) (string, error) {
 	t1 := time.Now()
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 9)
@@ -82,6 +86,20 @@ func GetUser(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{"status": "error", "message": "No user found with ID", "data": nil})
 	}
 	return c.JSON(fiber.Map{"status": "success", "message": "User found", "data": user})
+}
+
+func GetDeletedUsers(c *fiber.Ctx) error {
+	log.Println("Get deleted users")
+	db := database.DB
+	var users []model.User
+	// db.Unscoped().Find(&users, "deleted_at IS NOT NULL")
+	db.Unscoped().Find(&users, "deleted_at IS NOT NULL")
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "Deleted users found",
+		"data":    users,
+	})
 }
 
 // CreateUser new user
@@ -167,12 +185,13 @@ func UpdateUser(c *fiber.Ctx) error {
 
 // DeleteUser delete user
 func DeleteUser(c *fiber.Ctx) error {
-	type PasswordInput struct {
-		Password string `json:"password"`
-	}
 	var pi PasswordInput
 	if err := c.BodyParser(&pi); err != nil {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Review your input", "errors": err.Error()})
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Review your input",
+			"data":    err.Error(),
+		})
 	}
 	id := c.Params("id")
 	token := c.Locals("user").(*jwt.Token)
@@ -182,7 +201,11 @@ func DeleteUser(c *fiber.Ctx) error {
 	}
 
 	if !validUser(id, pi.Password) {
-		return c.Status(500).JSON(fiber.Map{"status": "error", "message": "Not valid user", "data": nil})
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Not valid password",
+			"data":    nil,
+		})
 	}
 
 	db := database.DB
@@ -192,4 +215,28 @@ func DeleteUser(c *fiber.Ctx) error {
 
 	db.Delete(&user)
 	return c.JSON(fiber.Map{"status": "success", "message": "User successfully deleted", "data": nil})
+}
+func PermanentDeleteUser(c *fiber.Ctx) error {
+	var pi PasswordInput
+	if err := c.BodyParser(&pi); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Review your input",
+			"data":    err.Error(),
+		})
+	}
+	id := c.Params("id")
+
+	db := database.DB
+	var user model.User
+
+	db.Unscoped().First(&user, id)
+
+	db.Unscoped().Delete(&user)
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "User successfully deleted",
+		"data":    nil,
+	})
 }
