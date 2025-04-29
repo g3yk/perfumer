@@ -5,21 +5,25 @@
     </div>
 
     <!-- Profile Section (Display if user is logged in) -->
-    <div v-if="userToken" class="profile-section">
-      <span class="username">Hello, {{ username }}!</span>
+<div v-if="userToken" class="profile-section">
+  <div class="hover-group">
+    <span class="username">Hello, {{ username }}!</span>
+
+    <div class="hover-actions">
       <router-link to="/profile">
         <button class="cta-button">My Profile</button>
       </router-link>
 
-      <!-- Sign Out button -->
       <button class="logout-button" @click="signOut">Sign Out</button>
     </div>
+  </div>
+</div>
 
     <!-- Guest Section (Display if user is not logged in) -->
     <div v-else class="profile-section">
       <span class="username">Welcome, Guest!</span>
-      <router-link to="/signup">
-        <button class="cta-button">Sign Up</button>
+      <router-link to="/login">
+        <button class="cta-button">Login</button>
       </router-link>
     </div>
 
@@ -29,6 +33,7 @@
         <span v-if="cartStore.cart.length > 0" class="cart-count">{{ cartStore.cart.length }}</span>
       </transition>
     </div>
+
 
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" :class="{ open: cartStore.isNavbarCartOpen }">
@@ -55,7 +60,13 @@
         </router-link>
       </div>
     </div>
+    
   </nav>
+  <div class="marquee-container">
+  <div class="marquee">
+    ✨ Welcome to Perfumer! Enjoy your scent journey ✨ Free shipping on orders over $50 ✨ All Customized Perfumes only 49,99.- ✨
+  </div>
+</div>
 </template>
 
 <script setup>
@@ -182,7 +193,7 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #f8f9fa;
+  background-color: transparent;
   position: relative;
 }
 
@@ -324,5 +335,59 @@ defineExpose({
 
 .logout-button:hover {
   background-color: #5a6268;
+}
+
+.hover-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s;
+}
+
+.username:hover {
+  color: #ff4b4b;
+}
+
+.hover-actions {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  margin-left: 10px;
+}
+
+.hover-group:hover .hover-actions {
+  display: flex;
+}
+
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  color: #333;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+  font-weight: 500;
+}
+
+.marquee {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll-left 15s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 </style>
