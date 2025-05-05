@@ -403,7 +403,7 @@ const isValidRegister = computed(() => {
 }
 
 .modal-content input {
-  width: 100%;
+  width: 92%;
   padding: 0.8rem;
   margin: 0.5rem 0;
   border-radius: 5px;

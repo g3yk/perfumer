@@ -3,7 +3,7 @@
   <router-view />
      <!-- Footer -->
      <footer class="footer">
-      <p>© 2025 Custom Perfume Co. All rights reserved.</p>
+      <p>© 2025 Perfumer Co. All rights reserved.</p>
     </footer>
 </template>
 
