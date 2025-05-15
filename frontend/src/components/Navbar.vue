@@ -84,6 +84,7 @@ const cartStore = useCartStore()
 const userToken = ref(localStorage.getItem('userToken'))
 const username = ref(localStorage.getItem('username') || 'Guest')
 
+
 // Load cart from localStorage when Navbar loads
 const savedCart = JSON.parse(localStorage.getItem('cart'))
 if (savedCart && Array.isArray(savedCart)) {
@@ -158,12 +159,9 @@ function handleClickOutside(event) {
   }
 }
 
-// Watch for changes to userToken and update the UI accordingly
 watch(userToken, (newValue) => {
-  if (newValue) {
-    username.value = localStorage.getItem('username') || 'Guest' // Update username after login
-  } else {
-    username.value = 'Guest' // Reset username after logout
+  if (!newValue) {
+    username.value = 'Guest' // only reset on logout
   }
 })
 

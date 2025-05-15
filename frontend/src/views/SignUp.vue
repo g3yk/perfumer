@@ -1,7 +1,7 @@
 <template>
     <div class="auth-page">
       <div class="auth-card">
-        <h1>Create Account</h1>
+        <h1 style="color: black">Create Account</h1>
   
         <form @submit.prevent="handleSignUp">
           <div class="input-group">
@@ -45,12 +45,13 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { useToast } from 'vue-toastification'
   
   const username = ref('')
   const email = ref('')
   const password = ref('')
   const router = useRouter()
-  
+  const toast = useToast() // Accessing the toast instance
   // Handle Sign Up
   function handleSignUp() {
     if (!username.value || !email.value || !password.value) {
@@ -64,8 +65,12 @@
     localStorage.setItem('password', password.value)
     localStorage.setItem('userToken', 'fake-token') // You can replace this with a real token
   
-    alert('Account created successfully!')
-    router.push('/checkout') // Redirect to a protected route (e.g., Checkout)
+    toast.success('Account has been created successfully!', {
+        position: 'top-right',
+        timeout: 3000,
+        hideProgressBar: false,
+      })
+    router.push('/') // Redirect to a protected route (e.g., Checkout)
   }
   </script>
   
@@ -75,8 +80,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: linear-gradient(45deg, #3498db, #8e44ad);
+    height: 75vh;
     font-family: 'Roboto', sans-serif;
   }
   

@@ -128,7 +128,7 @@
           <h3>{{ perfume.name }}</h3>
           <p class="brand">{{ perfume.brand }}</p>
           <p class="match-score">
-            Match Score: {{ perfume.matchCount }}
+            Match Score: <br>{{ perfume.matchCount }} Notes
             <span v-if="perfume.isExactMatch" class="exact-match">Exactly Matched</span>
           </p>
         </div>
@@ -306,7 +306,7 @@ function createPerfume() {
   margin: auto;
   padding: 2rem;
   text-align: center;
-  background: #f5f5f5;
+  background: transparent;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }

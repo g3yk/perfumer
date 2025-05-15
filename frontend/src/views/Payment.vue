@@ -109,7 +109,7 @@
     padding: 0.6rem;
     border: 1px solid #ddd;
     border-radius: 6px;
-    width: 100%;
+    width: 96%;
   }
   
   .pay-btn {

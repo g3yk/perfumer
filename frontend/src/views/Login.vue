@@ -1,7 +1,7 @@
 <template>
     <div class="auth-page">
       <div class="auth-card">
-        <h1>Login</h1>
+        <h1 style="color: black">Login</h1>
   
         <form @submit.prevent="handleLogin">
           <div class="input-group">
@@ -55,7 +55,7 @@
         hideProgressBar: false,
       })
       localStorage.setItem('userToken', 'fake-token') // You can replace this with a real token
-      router.push('/home') // Redirect to a protected route (e.g., Checkout)
+      router.push('/') // Redirect to a protected route (e.g., Checkout)
     } else {
       toast.error('Invalid credentials. Please try again.', {
         position: 'top-right',
@@ -72,8 +72,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: linear-gradient(45deg, #3498db, #8e44ad);
+    height: 75vh;
     font-family: 'Roboto', sans-serif;
   }
   

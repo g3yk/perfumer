@@ -32,7 +32,7 @@
         <div v-if="showAddressForm" style="margin-top: 2rem;">
           <h3>{{ isEditing ? 'Edit Address' : 'Add a New Address' }}</h3>
 
-          <div class="profile-details">
+          <div class="profile-details" style="margin-top: 1rem;">
             <label for="name">Address Name:</label>
             <input type="text" id="name" v-model="newName" placeholder="Enter address name (e.g., Home, Office)" />
           </div>
@@ -56,6 +56,7 @@
             {{ isEditing ? 'Update Address' : 'Save Address' }}
           </button>
         </div>
+        <button @click="saveProfile" class="save-button" style="margin-top: 2rem;">Save Profile</button>
       </div>
 
       <!-- Orders Section -->
@@ -72,8 +73,6 @@
           <button @click="viewOrderDetails(order)">View Details</button>
         </div>
       </div>
-
-      <button @click="saveProfile" class="save-button" style="margin-top: 2rem;">Save Profile</button>
     </div>
 
     <div v-else>
@@ -83,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const userToken = ref(localStorage.getItem('userToken'))
 const username = ref(localStorage.getItem('username') || '')
@@ -122,10 +121,6 @@ function loadOrders() {
   console.log(orders.value)  // Debugging line
 }
 
-onMounted(() => {
-  loadOrders()
-})
-
 function saveAddresses() {
   const key = getAddressKey()
   localStorage.setItem(key, JSON.stringify(addresses.value))
@@ -135,6 +130,19 @@ function saveOrders() {
   const key = getOrdersKey()
   localStorage.setItem(key, JSON.stringify(orders.value))
 }
+
+watch(userToken, (newValue) => {
+  if (newValue) {
+    email.value = localStorage.getItem('email') || ''
+    loadAddresses()
+    loadOrders()
+  } else {
+    username.value = 'Guest'
+    email.value = ''
+    addresses.value = []
+    orders.value = []
+  }
+})
 
 function startAddingAddress() {
   if (showAddressForm.value) {
@@ -200,6 +208,7 @@ function clearAddressForm() {
 }
 
 function saveProfile() {
+  console.log("Saving username:", username.value)
   localStorage.setItem('username', username.value)
   localStorage.setItem('email', email.value)
   alert('Profile updated successfully!')
@@ -243,7 +252,7 @@ label {
 }
 
 input {
-  width: 100%;
+  width: 95%;
   padding: 0.8rem;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -252,12 +261,13 @@ input {
 .save-button {
   width: 100%;
   padding: 1rem;
-  background-color: #28a745;
-  color: white;
+  color: black;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .save-button:hover {
