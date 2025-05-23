@@ -1,4 +1,5 @@
 %% https://www.mermaidflow.app/editor
+%%{init: {'theme': 'base', 'themeVariables': { 'edgeLabelBackground': 'transparent' }}}%%
     
 flowchart TD
     classDef frontend fill:#42b883,color:#fff,stroke:#42b883
@@ -23,3 +24,7 @@ flowchart TD
     Go -->|"Cache Operations"| Redis
     Go -->|"Database Queries"| PG
     Go -->|"LLM Requests"| Ollama
+
+    %% Styles
+	style Frontend fill:transparent,stroke:#777
+	style Backend fill:transparent,stroke:#777
