@@ -10,6 +10,8 @@
 
 ## Services
 
+All services can be found in the [compose.yaml](./compose.yaml) file.
+
 1. [Go API](./go-api/Dockerfile)
 2. [Vue Frontend](./frontend/Dockerfile)
 3. [LLM](./llm/Dockerfile)
