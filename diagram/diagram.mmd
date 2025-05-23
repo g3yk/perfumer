@@ -1,0 +1,25 @@
+%% https://www.mermaidflow.app/editor
+    
+flowchart TD
+    classDef frontend fill:#42b883,color:#fff,stroke:#42b883
+    classDef backend fill:#00add9,color:#fff,stroke:#00add9
+    classDef cache fill:#c41e3a,color:#fff,stroke:#c41e3a
+    classDef db fill:#1a237e,color:#fff,stroke:#1a237e
+    classDef ai fill:#1b5e20,color:#fff,stroke:#1b5e20
+    
+    subgraph Frontend["Frontend Layer"]
+        Vue[VUE.js Frontend]:::frontend
+    end
+    
+    subgraph Backend["Backend Services"]
+        Go[Go API Server]:::backend
+        Redis[(Redis Cache)]:::cache
+        PG[(PostgreSQL DB)]:::db
+        Ollama[Ollama LLM]:::ai
+    end
+    
+    %% Connections
+    Vue -->|"HTTP Requests"| Go
+    Go -->|"Cache Operations"| Redis
+    Go -->|"Database Queries"| PG
+    Go -->|"LLM Requests"| Ollama
