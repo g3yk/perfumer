@@ -64,6 +64,7 @@
     <!-- Modal -->
     <Modal v-if="activeNote" :note="activeNote" @close="activeNote = null" />
 
+    <ChatBot />
  
   </div>
 </template>
@@ -71,6 +72,7 @@
 <script setup>
 import { ref } from 'vue'
 import Modal from '../components/Modal.vue'
+import ChatBot from "../components/ChatBot.vue";
 
 // ✅ Import Swiper and modules correctly
 import { Swiper, SwiperSlide } from 'swiper/vue'
