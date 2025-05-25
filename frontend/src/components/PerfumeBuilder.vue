@@ -129,7 +129,7 @@
           <p class="brand">{{ perfume.brand }}</p>
           <p class="match-score">
             Match Score: <br>{{ perfume.matchCount }} Notes
-            <span v-if="perfume.isExactMatch" class="exact-match">Exactly Matched</span>
+            <span v-if="perfume.isExactMatch" class="exact-match"><br>Exactly Matched</span>
           </p>
         </div>
       </div>
