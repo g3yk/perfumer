@@ -2,11 +2,8 @@ name: perfumer
 
 services:
   go-api:
-    # restart: always
+    restart: always
     build: ./go-api
-    # build:
-    #   context: ./go-api
-    #   dockerfile: Dockerfile
     environment:
       - DB_HOST=db
       - DB_PORT=${DB_PORT}
@@ -14,8 +11,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - SECRET=${GO_SECRET}
-    ports:
-      - 3000:3000
     expose:
       - "3000"
     networks:
@@ -25,7 +20,7 @@ services:
       - db
       - cache
   frontend:
-    # restart: always
+    restart: always
     build: ./frontend
     ports:
       - 80:80
@@ -37,14 +32,11 @@ services:
       - frontend
   db:
     image: postgres:alpine
-    # restart: always
+    restart: always
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-    # WARNING: Do not forget close db port
-    ports:
-      - ${DB_PORT}:${DB_PORT}
     expose:
       - ${DB_PORT}
     volumes:
@@ -52,21 +44,20 @@ services:
     networks:
       - backend
   cache:
-    # restart: always
+    restart: always
     image: redis:alpine
     expose:
       - 6379
     networks:
       - backend
   llm:
-    # restart: always
+    restart: always
     build: ./llm
     expose:
       - 11434
-    ports:
-      - 11434:11434
     networks:
       - backend
+      - frontend
 
 networks:
   backend:
